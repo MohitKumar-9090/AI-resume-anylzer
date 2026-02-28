@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 
-const API_PATH = "/api/analyze";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const API_PATH = API_BASE_URL ? `${API_BASE_URL}/analyze` : "/api/analyze";
 
 function SkillChips({ items, emptyText, tone = "neutral" }) {
   if (!items?.length) {
