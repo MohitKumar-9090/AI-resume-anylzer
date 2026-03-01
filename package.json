@@ -3,11 +3,13 @@
   "private": true,
   "scripts": {
     "install:frontend": "npm --prefix frontend install",
+    "postinstall": "npm --prefix frontend install",
     "dev": "npm --prefix frontend run dev",
     "build": "npm --prefix frontend run build",
     "preview": "npm --prefix frontend run preview"
   },
   "devDependencies": {
-    "vite": "^5.0.0"
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8"
   }
 }
