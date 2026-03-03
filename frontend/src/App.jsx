@@ -1,7 +1,16 @@
 import { useMemo, useState } from "react";
 
+// Production: Set VITE_API_BASE_URL on Vercel dashboard
+// Development: Use .env.local with VITE_API_BASE_URL=http://127.0.0.1:5000
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
-const API_PATH = API_BASE_URL ? `${API_BASE_URL}/analyze` : "/api/analyze";
+
+// Must have trailing /analyze - the Flask route is /analyze
+const API_PATH = API_BASE_URL 
+  ? `${API_BASE_URL}/analyze` 
+  : "/analyze"; // Only works with dev proxy
+
+// print at startup so you can verify which URL is baked into the build
+console.log("Using API_PATH", API_PATH);
 
 function SkillChips({ items, emptyText, tone = "neutral" }) {
   if (!items?.length) {
