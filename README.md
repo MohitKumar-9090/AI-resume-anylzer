@@ -63,6 +63,8 @@ python app.py
 
 Backend runs on `http://127.0.0.1:5000`.
 
+Important: `VITE_API_BASE_URL` must be the backend base URL (for example `https://your-backend.onrender.com`), not the full `/analyze` path.
+
 ## Frontend Setup (React + Vite)
 
 1. Open another terminal and move into frontend:

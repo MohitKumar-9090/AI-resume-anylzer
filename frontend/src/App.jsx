@@ -3,11 +3,21 @@ import { useMemo, useState } from "react";
 // Production: Set VITE_API_BASE_URL on Vercel dashboard
 // Development: Use .env.local with VITE_API_BASE_URL=http://127.0.0.1:5000
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
+const IS_LOCAL_HOST =
+  typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-// Must have trailing /analyze - the Flask route is /analyze
-const API_PATH = API_BASE_URL 
-  ? `${API_BASE_URL}/analyze` 
-  : "/analyze"; // Only works with dev proxy
+function resolveApiPath() {
+  if (API_BASE_URL) {
+    // Accept either host-only values or full analyze endpoint values in env.
+    return API_BASE_URL.endsWith("/analyze") ? API_BASE_URL : `${API_BASE_URL}/analyze`;
+  }
+
+  // Dev server proxy can handle this, but production needs VITE_API_BASE_URL.
+  return IS_LOCAL_HOST ? "/analyze" : "";
+}
+
+const API_PATH = resolveApiPath();
 
 // print at startup so you can verify which URL is baked into the build
 console.log("Using API_PATH", API_PATH);
@@ -42,6 +52,10 @@ export default function App() {
   const analyzeResume = async (event) => {
     event.preventDefault();
     if (!canAnalyze) return;
+    if (!API_PATH) {
+      setError("Missing VITE_API_BASE_URL. Set it to your backend URL (without /analyze) and redeploy.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("resume", resumeFile);
